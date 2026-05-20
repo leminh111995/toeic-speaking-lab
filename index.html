@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TOEIC Speaking Lab</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+  :root {
+    --green: #1D9E75; --green-light: #E1F5EE; --green-dark: #0F6E56;
+    --bg: #ffffff; --bg2: #f7f7f5; --bg3: #f0f0ec;
+    --text: #1a1a1a; --text2: #666; --text3: #999;
+    --border: rgba(0,0,0,0.1); --border2: rgba(0,0,0,0.18);
+    --radius: 10px; --radius-lg: 14px;
+    --purple-bg: #EEEDFE; --purple-text: #3C3489;
+    --amber-bg: #FAEEDA; --amber-text: #633806;
+    --blue-bg: #E6F1FB; --blue-text: #185FA5;
+    --coral-bg: #FAECE7; --coral-text: #993C1D;
+    --red: #E24B4A; --amber: #EF9F27;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg3); color: var(--text); min-height: 100vh; }
+
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* LOGIN */
+  .login-page { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 1rem; }
+  .login-box { background: var(--bg); border-radius: var(--radius-lg); border: 1px solid var(--border); padding: 2rem; width: 100%; max-width: 360px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
+  .login-logo { text-align: center; margin-bottom: 1.5rem; }
+  .logo-mark { width: 52px; height: 52px; border-radius: 14px; background: var(--green); display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; font-size: 24px; color: white; }
+  .login-logo h1 { font-size: 20px; font-weight: 600; }
+  .login-logo p { font-size: 13px; color: var(--text2); margin-top: 4px; }
+  .field-label { font-size: 12px; color: var(--text2); display: block; margin: .875rem 0 5px; }
+  input[type=text], input[type=url], textarea, select {
+    width: 100%; padding: 10px 12px; border: 1px solid var(--border2); border-radius: var(--radius);
+    font-size: 14px; background: var(--bg2); color: var(--text); font-family: inherit;
+  }
+  input:focus, textarea:focus { outline: none; border-color: var(--green); }
+  .btn-green { background: var(--green); color: white; border: none; padding: 11px 20px; border-radius: var(--radius); font-size: 14px; font-weight: 500; cursor: pointer; transition: opacity .15s; font-family: inherit; }
+  .btn-green:hover { opacity: .87; }
+  .btn-green:disabled { opacity: .4; cursor: not-allowed; }
+  .btn-outline { background: var(--bg); color: var(--text); border: 1px solid var(--border2); padding: 9px 16px; border-radius: var(--radius); font-size: 13px; cursor: pointer; font-family: inherit; }
+  .btn-outline:hover { background: var(--bg2); }
+
+  /* MAIN LAYOUT */
+  .main-page { max-width: 720px; margin: 0 auto; padding: 1rem; }
+
+  /* HEADER */
+  .hdr { display: flex; align-items: center; justify-content: space-between; background: var(--bg); border-radius: var(--radius-lg); border: 1px solid var(--border); padding: .875rem 1.25rem; margin-bottom: 1rem; }
+  .hdr-brand { display: flex; align-items: center; gap: 9px; }
+  .hdr-icon { width: 32px; height: 32px; background: var(--green); border-radius: 9px; display: flex; align-items: center; justify-content: center; color: white; font-size: 16px; }
+  .hdr-title { font-size: 16px; font-weight: 600; }
+  .hdr-right { display: flex; align-items: center; gap: 8px; }
+  .avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--green-light); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: var(--green-dark); }
+  .btn-sm { font-size: 12px; color: var(--text2); background: none; border: 1px solid var(--border); border-radius: 8px; padding: 4px 10px; cursor: pointer; }
+  .btn-sm:hover { background: var(--bg2); }
+
+  /* TABS */
+  .tabs { display: flex; gap: 0; background: var(--bg); border-radius: var(--radius-lg); border: 1px solid var(--border); padding: 4px; margin-bottom: 1rem; }
+  .tab { flex: 1; padding: 8px; font-size: 13px; color: var(--text2); cursor: pointer; border-radius: 8px; text-align: center; transition: all .15s; }
+  .tab.active { background: var(--green); color: white; font-weight: 500; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* CARD */
+  .card { background: var(--bg); border-radius: var(--radius-lg); border: 1px solid var(--border); padding: 1.25rem; margin-bottom: 1rem; }
+
+  /* PROGRESS */
+  .prog-steps { display: flex; gap: 3px; margin-bottom: 5px; }
+  .step-dot { flex: 1; height: 4px; border-radius: 2px; background: var(--bg3); transition: background .3s; }
+  .step-dot.done { background: var(--green); }
+  .step-dot.current { background: #5DCAA5; }
+  .prog-label { font-size: 12px; color: var(--text2); margin-bottom: 1rem; }
+
+  /* TASK */
+  .task-badge { font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 12px; display: inline-block; }
+  .badge-read { background: var(--green-light); color: var(--green-dark); }
+  .badge-desc { background: var(--blue-bg); color: var(--blue-text); }
+  .badge-resp { background: var(--amber-bg); color: var(--amber-text); }
+  .badge-info { background: var(--purple-bg); color: var(--purple-text); }
+  .badge-opin { background: var(--coral-bg); color: var(--coral-text); }
+  .task-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .task-num { font-size: 12px; color: var(--text2); }
+  .info-box { background: var(--bg2); border-radius: var(--radius); padding: 12px; font-size: 13px; line-height: 1.65; margin-bottom: 10px; border-left: 3px solid #AFA9EC; color: var(--text); white-space: pre-line; }
+  .info-label { font-size: 11px; font-weight: 600; color: var(--purple-text); margin-bottom: 6px; }
+  .scenario-box { font-size: 12px; color: var(--text2); font-style: italic; margin-bottom: 8px; }
+  .task-body { font-size: 15px; line-height: 1.8; color: var(--text); white-space: pre-line; }
+  .task-hint { font-size: 12px; color: var(--text2); margin-top: 10px; font-style: italic; }
+
+  /* TIMER */
+  .timer-wrap { background: var(--bg); border-radius: var(--radius-lg); border: 1px solid var(--border); padding: .875rem 1.25rem; margin-bottom: 1rem; }
+  .phase-pill { font-size: 12px; font-weight: 500; padding: 3px 12px; border-radius: 12px; display: inline-block; margin-bottom: 8px; }
+  .phase-prep { background: var(--amber-bg); color: var(--amber-text); }
+  .phase-speak { background: var(--green-light); color: var(--green-dark); }
+  .timer-row { display: flex; align-items: center; gap: 10px; }
+  .timer-label { font-size: 12px; color: var(--text2); min-width: 75px; }
+  .timer-bar-wrap { flex: 1; height: 6px; background: var(--bg3); border-radius: 3px; overflow: hidden; }
+  .timer-bar { height: 100%; border-radius: 3px; transition: width .9s linear, background .3s; }
+  .timer-num { font-size: 15px; font-weight: 600; min-width: 28px; text-align: right; }
+
+  /* RECORD */
+  .rec-zone { display: flex; align-items: center; gap: 12px; padding: 1rem 1.25rem; background: var(--bg2); border-radius: var(--radius-lg); border: 1px solid var(--border); margin-bottom: 1rem; }
+  .btn-rec { width: 46px; height: 46px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; transition: all .2s; flex-shrink: 0; }
+  .btn-rec.idle { background: var(--green); color: white; }
+  .btn-rec.recording { background: var(--red); color: white; animation: pulse 1s infinite; }
+  .btn-rec.done { background: var(--green-light); color: var(--green-dark); }
+  .btn-rec:disabled { opacity: .35; cursor: not-allowed; animation: none; }
+  @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.09)} }
+  .rec-info { flex: 1; min-width: 0; }
+  .rec-status { font-size: 14px; font-weight: 500; }
+  .rec-sub { font-size: 12px; color: var(--text2); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  /* FEEDBACK */
+  .fb-score-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .fb-title { font-size: 15px; font-weight: 600; }
+  .score-big { font-size: 30px; font-weight: 700; }
+  .score-max { font-size: 13px; color: var(--text2); }
+  .bar-wrap { background: var(--bg3); border-radius: 4px; height: 7px; margin-bottom: 1rem; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; transition: width .7s ease; }
+  .sub-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 1rem; }
+  .sub-item { background: var(--bg2); border-radius: var(--radius); padding: 10px; text-align: center; }
+  .sub-val { font-size: 17px; font-weight: 600; }
+  .sub-lbl { font-size: 11px; color: var(--text2); margin-top: 2px; }
+  .sec-hdr { font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: .05em; margin: 1rem 0 8px; display: flex; align-items: center; gap: 5px; }
+  .transcript { background: var(--bg2); border-radius: var(--radius); padding: 12px; font-size: 13px; line-height: 1.8; margin-bottom: .5rem; }
+  .chip { padding: 4px 10px; border-radius: 14px; font-size: 12px; display: inline-block; margin: 2px; }
+  .chip-g { background: #EAF3DE; color: #3B6D11; }
+  .chip-w { background: #FAEEDA; color: #633806; }
+  .chip-b { background: #FCEBEB; color: #A32D2D; }
+  .word-det { padding: 9px 12px; border-radius: var(--radius); margin-bottom: 6px; border-left: 3px solid transparent; }
+  .det-warn { border-left-color: var(--amber); background: #FAEEDA33; }
+  .det-bad { border-left-color: var(--red); background: #FCEBEB44; }
+  .det-word { font-size: 13px; font-weight: 600; }
+  .det-ipa { font-size: 12px; color: var(--text2); }
+  .det-tip { font-size: 13px; margin-top: 2px; }
+  .liaison-card { background: var(--bg2); border-radius: var(--radius); padding: 11px; margin-bottom: .75rem; }
+  .liaison-item { font-size: 13px; line-height: 1.7; margin-bottom: 5px; padding: 7px 10px; background: var(--bg); border-radius: 7px; border-left: 3px solid #5DCAA5; }
+  .liaison-word { color: var(--green-dark); font-weight: 600; }
+  .pause-item { border-left-color: #AFA9EC !important; }
+  .pause-word { color: var(--purple-text); font-weight: 600; }
+  .sug-item { font-size: 13px; line-height: 1.75; margin-bottom: 6px; }
+  .t-g { color: #3B6D11; }
+  .t-w { color: #854F0B; text-decoration: underline dotted; }
+  .t-b { color: #A32D2D; text-decoration: underline; font-weight: 600; }
+
+  /* NAV */
+  .nav-row { display: flex; gap: 8px; margin-bottom: 1rem; }
+  .btn-nav { padding: 9px 18px; border: 1px solid var(--border2); background: var(--bg); border-radius: var(--radius); font-size: 13px; cursor: pointer; color: var(--text); font-family: inherit; }
+  .btn-nav:hover { background: var(--bg2); }
+  .btn-nav.pri { background: var(--green); color: white; border-color: var(--green); }
+  .btn-nav.pri:hover { opacity: .87; }
+
+  /* CUSTOM */
+  .part-sel { display: flex; gap: 6px; flex-wrap: wrap; margin-top: .5rem; }
+  .part-pill { padding: 5px 12px; border-radius: 16px; border: 1px solid var(--border2); background: var(--bg); color: var(--text2); font-size: 12px; cursor: pointer; }
+  .part-pill.sel { background: var(--green); color: white; border-color: var(--green); }
+  .custom-item { display: flex; align-items: center; gap: 8px; padding: 9px 11px; background: var(--bg2); border-radius: var(--radius); margin-bottom: 6px; }
+  .custom-item-text { font-size: 13px; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .btn-use { font-size: 12px; padding: 5px 12px; background: var(--green); color: white; border: none; border-radius: 8px; cursor: pointer; flex-shrink: 0; }
+  .btn-del { font-size: 12px; padding: 5px 9px; background: none; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; color: var(--text2); }
+
+  /* HISTORY */
+  .hist-item { display: flex; align-items: center; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 12px; }
+  .hist-item:last-child { border-bottom: none; }
+  .hist-q { color: var(--text2); flex: 1; margin-right: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .empty-st { text-align: center; padding: 1.5rem; color: var(--text2); font-size: 13px; }
+  .analyzing { text-align: center; padding: 1.5rem; color: var(--text2); font-size: 13px; }
+  .spin { display: inline-block; animation: spin 1s linear infinite; font-size: 22px; margin-bottom: 6px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .link-row { display: flex; gap: 8px; }
+  .link-row input { flex: 1; }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="screen active" id="sc-login">
+  <div class="login-page">
+    <div class="login-box">
+      <div class="login-logo">
+        <div class="logo-mark"><i class="ti ti-microphone"></i></div>
+        <h1>TOEIC Speaking Lab</h1>
+        <p>Luyện 11 câu chuẩn ETS — AI chấm phát âm</p>
+      </div>
+      <span class="field-label">Tên học viên</span>
+      <input type="text" id="inp-name" placeholder="Nguyễn Văn An">
+      <span class="field-label">Mã học viên / Email</span>
+      <input type="text" id="inp-code" placeholder="HV001 hoặc an@gmail.com">
+      <button class="btn-green" onclick="doLogin()" style="width:100%;margin-top:1.25rem;">
+        <i class="ti ti-login"></i> Bắt đầu luyện tập
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="screen" id="sc-main">
+  <div class="main-page">
+    <div class="hdr">
+      <div class="hdr-brand">
+        <div class="hdr-icon"><i class="ti ti-microphone"></i></div>
+        <span class="hdr-title">TOEIC Speaking Lab</span>
+      </div>
+      <div class="hdr-right">
+        <div class="avatar" id="av-init">HV</div>
+        <span style="font-size:13px;color:var(--text2);" id="av-name">Học viên</span>
+        <button class="btn-sm" onclick="doLogout()">Đăng xuất</button>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab('practice')"><i class="ti ti-microphone"></i> Luyện tập</div>
+      <div class="tab" onclick="switchTab('custom')"><i class="ti ti-plus"></i> Thêm đề</div>
+      <div class="tab" onclick="switchTab('history')"><i class="ti ti-history"></i> Lịch sử</div>
+    </div>
+
+    <!-- PRACTICE -->
+    <div class="tab-panel active" id="tab-practice">
+      <div class="prog-steps" id="prog-steps"></div>
+      <div class="prog-label" id="prog-label">Câu 1/11</div>
+
+      <div class="card">
+        <div class="task-meta">
+          <span class="task-badge badge-read" id="task-badge">Part 1 – Read aloud</span>
+          <span class="task-num" id="task-num">Câu 1</span>
+        </div>
+        <div id="info-provided" style="display:none;"></div>
+        <div id="scenario-box" class="scenario-box" style="display:none;"></div>
+        <div class="task-body" id="task-body">—</div>
+        <div class="task-hint" id="task-hint"></div>
+      </div>
+
+      <div class="timer-wrap" id="timer-section" style="display:none;">
+        <span class="phase-pill phase-prep" id="phase-lbl">⏳ Chuẩn bị</span>
+        <div class="timer-row">
+          <div class="timer-label" id="timer-label">Chuẩn bị</div>
+          <div class="timer-bar-wrap"><div class="timer-bar" id="timer-bar" style="width:100%;background:var(--amber);"></div></div>
+          <div class="timer-num" id="timer-num">45</div>
+        </div>
+      </div>
+
+      <div class="rec-zone">
+        <button class="btn-rec idle" id="btn-rec" onclick="toggleRec()">
+          <i class="ti ti-microphone" id="rec-icon"></i>
+        </button>
+        <div class="rec-info">
+          <div class="rec-status" id="rec-status">Nhấn mic để bắt đầu</div>
+          <div class="rec-sub" id="rec-sub">Đồng hồ tự chạy khi bắt đầu ghi âm</div>
+        </div>
+        <button class="btn-green" id="btn-check" onclick="doAnalyze()" disabled style="flex-shrink:0;">Chấm điểm ↗</button>
+      </div>
+
+      <div class="analyzing" id="analyzing" style="display:none;">
+        <div class="spin"><i class="ti ti-loader-2"></i></div>
+        <div>AI đang phân tích phát âm, nối âm và ngắt nghỉ...</div>
+      </div>
+
+      <div id="fb-section" style="display:none;">
+        <div class="card">
+          <div class="fb-score-row">
+            <div class="fb-title">Kết quả phát âm</div>
+            <div><span class="score-big" id="sc-total">0</span><span class="score-max">/100</span></div>
+          </div>
+          <div class="bar-wrap"><div class="bar-fill" id="sc-bar" style="width:0%;"></div></div>
+          <div class="sub-grid">
+            <div class="sub-item"><div class="sub-val" id="sc-acc">—</div><div class="sub-lbl">Độ chính xác</div></div>
+            <div class="sub-item"><div class="sub-val" id="sc-flu">—</div><div class="sub-lbl">Lưu loát</div></div>
+            <div class="sub-item"><div class="sub-val" id="sc-com">—</div><div class="sub-lbl">Hoàn chỉnh</div></div>
+          </div>
+
+          <div class="sec-hdr"><i class="ti ti-align-left"></i> Transcript so sánh</div>
+          <div class="transcript" id="fb-trans">—</div>
+
+          <div class="sec-hdr"><i class="ti ti-grid-dots"></i> Phân tích từng từ</div>
+          <div id="fb-chips" style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:.75rem;"></div>
+          <div id="fb-dets"></div>
+
+          <div class="sec-hdr"><i class="ti ti-wave-sine"></i> Nối âm (Linking sounds)</div>
+          <div class="liaison-card"><div id="liaison-list"></div></div>
+
+          <div class="sec-hdr"><i class="ti ti-pause"></i> Ngắt nghỉ (Pausing & chunking)</div>
+          <div class="liaison-card"><div id="pause-list"></div></div>
+
+          <div class="sec-hdr"><i class="ti ti-bulb"></i> Gợi ý tổng hợp</div>
+          <div id="fb-sugs"></div>
+        </div>
+        <div class="nav-row">
+          <button class="btn-nav" onclick="prevQ()"><i class="ti ti-arrow-left"></i> Câu trước</button>
+          <button class="btn-nav pri" onclick="nextQ()">Câu tiếp theo <i class="ti ti-arrow-right"></i></button>
+        </div>
+      </div>
+
+      <div class="nav-row" id="nav-plain">
+        <button class="btn-nav" onclick="prevQ()"><i class="ti ti-arrow-left"></i> Câu trước</button>
+        <button class="btn-nav pri" onclick="nextQ()">Câu tiếp theo <i class="ti ti-arrow-right"></i></button>
+      </div>
+    </div>
+
+    <!-- CUSTOM -->
+    <div class="tab-panel" id="tab-custom">
+      <div class="card">
+        <div style="font-size:15px;font-weight:600;margin-bottom:.875rem;">Thêm đề luyện tập mới</div>
+
+        <span class="field-label">Dán link nguồn (tùy chọn)</span>
+        <div class="link-row">
+          <input type="url" id="inp-link" placeholder="https://estudyme.com/toeic-speaking...">
+          <button class="btn-outline" onclick="openLink()"><i class="ti ti-external-link"></i> Mở</button>
+        </div>
+        <div style="font-size:11px;color:var(--text2);margin-top:4px;">Mở link → copy nội dung → dán vào ô bên dưới</div>
+
+        <span class="field-label">Nội dung câu hỏi / bài đọc <span style="color:var(--red);">*</span></span>
+        <textarea id="inp-content" rows="4" placeholder="Dán hoặc nhập nội dung đề vào đây..."></textarea>
+
+        <span class="field-label">Thông tin bổ sung — dùng cho Q8–10 (để trống nếu không cần)</span>
+        <textarea id="inp-info" rows="3" placeholder="Bảng lịch, thông báo... (để trống nếu không có)"></textarea>
+
+        <span class="field-label">Loại câu</span>
+        <div class="part-sel" id="part-sel">
+          <div class="part-pill sel" data-part="read" onclick="selPart(this)">Read aloud (45s)</div>
+          <div class="part-pill" data-part="describe" onclick="selPart(this)">Describe a picture (30s)</div>
+          <div class="part-pill" data-part="respond" onclick="selPart(this)">Respond (15s)</div>
+          <div class="part-pill" data-part="respond30" onclick="selPart(this)">Respond (30s)</div>
+          <div class="part-pill" data-part="info15" onclick="selPart(this)">Info provided (15s)</div>
+          <div class="part-pill" data-part="info30" onclick="selPart(this)">Info provided (30s)</div>
+          <div class="part-pill" data-part="opinion" onclick="selPart(this)">Express opinion (60s)</div>
+        </div>
+
+        <button class="btn-green" onclick="addCustomTask()" style="margin-top:1rem;">
+          <i class="ti ti-plus"></i> Thêm vào danh sách luyện tập
+        </button>
+      </div>
+
+      <div style="font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;">Đề tự thêm</div>
+      <div id="custom-list"><div class="empty-st">Chưa có đề nào. Thêm đề ở trên nhé!</div></div>
+    </div>
+
+    <!-- HISTORY -->
+    <div class="tab-panel" id="tab-history">
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.875rem;">
+          <div style="font-size:15px;font-weight:600;">Lịch sử luyện tập</div>
+          <button class="btn-sm" onclick="clearHist()">Xóa tất cả</button>
+        </div>
+        <div id="hist-list"><div class="empty-st">Chưa có lịch sử</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const TASKS_DEFAULT=[
+  {q:1,part:"Part 1",label:"Read aloud",badge:"badge-read",prepTime:45,respTime:45,type:"read",
+   hint:"Chuẩn bị 45 giây → Đọc to 45 giây. Chú ý phát âm, ngữ điệu và ngắt nghỉ tự nhiên.",
+   text:"If you're shopping, sightseeing, and running around every minute, your vacation can seem like hard work. To avoid vacation stress, come to the Blue Valley Inn on beautiful Lake Mead. While staying at our inn, you'll breathe clean country air as you view spectacular sights. With its spacious rooms, swimming pool, and many outdoor activities, the inn is the perfect place for a vacation you won't forget."},
+  {q:2,part:"Part 1",label:"Read aloud",badge:"badge-read",prepTime:45,respTime:45,type:"read",
+   hint:"Chuẩn bị 45 giây → Đọc to 45 giây. Chú ý phát âm, ngữ điệu và ngắt nghỉ tự nhiên.",
+   text:"Attention all passengers: Flight 204 to Singapore will begin boarding at Gate 7 in approximately fifteen minutes. Please have your boarding pass and identification ready for inspection. Passengers requiring special assistance should proceed to the gate immediately. We apologize for the brief delay and thank you for your patience."},
+  {q:3,part:"Part 2",label:"Describe a picture",badge:"badge-desc",prepTime:45,respTime:30,type:"describe",
+   hint:"Chuẩn bị 45 giây → Mô tả 30 giây. Nói về người, địa điểm, hành động, không khí.",
+   text:"[Ảnh: Một nhóm nhân viên văn phòng đang họp quanh bàn tròn. Trên bàn có laptop, tài liệu và cốc cà phê.]\n\nHãy mô tả bức ảnh này chi tiết nhất có thể."},
+  {q:4,part:"Part 2",label:"Describe a picture",badge:"badge-desc",prepTime:45,respTime:30,type:"describe",
+   hint:"Chuẩn bị 45 giây → Mô tả 30 giây. Nói về người, địa điểm, hành động, không khí.",
+   text:"[Ảnh: Một nhà hàng đông đúc giờ ăn trưa. Phục vụ đang bưng thức ăn, khách ngồi đầy bàn.]\n\nHãy mô tả bức ảnh này chi tiết nhất có thể."},
+  {q:5,part:"Part 3",label:"Respond to questions",badge:"badge-resp",prepTime:3,respTime:15,type:"respond",
+   hint:"Chuẩn bị 3 giây → Trả lời 15 giây. Trả lời ngắn gọn, tự nhiên.",
+   scenario:"Imagine that a marketing firm is conducting a survey about shopping habits. You have agreed to participate in a telephone interview.",
+   text:"How often do you go shopping each week?"},
+  {q:6,part:"Part 3",label:"Respond to questions",badge:"badge-resp",prepTime:3,respTime:15,type:"respond",
+   hint:"Chuẩn bị 3 giây → Trả lời 15 giây. Trả lời ngắn gọn, tự nhiên.",
+   scenario:"Imagine that a marketing firm is conducting a survey about shopping habits. You have agreed to participate in a telephone interview.",
+   text:"Do you prefer shopping online or in a physical store? Why?"},
+  {q:7,part:"Part 3",label:"Respond to questions",badge:"badge-resp",prepTime:3,respTime:30,type:"respond",
+   hint:"Chuẩn bị 3 giây → Trả lời 30 giây. Mở rộng hơn, thêm ví dụ cụ thể.",
+   scenario:"Imagine that a marketing firm is conducting a survey about shopping habits. You have agreed to participate in a telephone interview.",
+   text:"Describe a recent shopping experience that was particularly memorable. What made it stand out?"},
+  {q:8,part:"Part 4",label:"Respond using info provided",badge:"badge-info",prepTime:3,respTime:15,type:"info",
+   hint:"Đọc thông tin 45 giây → Chuẩn bị 3 giây → Trả lời 15 giây. Bám sát thông tin đã cho.",
+   info:"WORKSHOP SCHEDULE — Business Communication Skills\nSaturday, March 15 | City Conference Center, Room 204\n\n9:00 AM – 10:30 AM   Effective Email Writing ($45/person)\n10:45 AM – 12:00 PM  Public Speaking Fundamentals ($60/person)\n1:00 PM – 2:30 PM    Negotiation Techniques ($75/person)\n2:45 PM – 4:00 PM    Cross-cultural Communication ($55/person)\n\nLunch included for full-day participants. Register by March 10.\nContact: workshop@bizcomm.edu",
+   text:"What time does the Public Speaking session begin, and how much does it cost?"},
+  {q:9,part:"Part 4",label:"Respond using info provided",badge:"badge-info",prepTime:3,respTime:15,type:"info",
+   hint:"Chuẩn bị 3 giây → Trả lời 15 giây. Bám sát thông tin đã cho.",
+   info:"WORKSHOP SCHEDULE — Business Communication Skills\nSaturday, March 15 | City Conference Center, Room 204\n\n9:00 AM – 10:30 AM   Effective Email Writing ($45/person)\n10:45 AM – 12:00 PM  Public Speaking Fundamentals ($60/person)\n1:00 PM – 2:30 PM    Negotiation Techniques ($75/person)\n2:45 PM – 4:00 PM    Cross-cultural Communication ($55/person)\n\nLunch included for full-day participants. Register by March 10.\nContact: workshop@bizcomm.edu",
+   text:"Is lunch provided, and what is the deadline to register?"},
+  {q:10,part:"Part 4",label:"Respond using info provided",badge:"badge-info",prepTime:3,respTime:30,type:"info",
+   hint:"Câu hỏi tổng hợp → Trả lời 30 giây. Trong thi thật, câu hỏi được đọc 2 lần.",
+   info:"WORKSHOP SCHEDULE — Business Communication Skills\nSaturday, March 15 | City Conference Center, Room 204\n\n9:00 AM – 10:30 AM   Effective Email Writing ($45/person)\n10:45 AM – 12:00 PM  Public Speaking Fundamentals ($60/person)\n1:00 PM – 2:30 PM    Negotiation Techniques ($75/person)\n2:45 PM – 4:00 PM    Cross-cultural Communication ($55/person)\n\nLunch included for full-day participants. Register by March 10.\nContact: workshop@bizcomm.edu",
+   text:"I'm only available in the afternoon. Could you tell me which sessions are available and give me all the details I'd need to sign up?"},
+  {q:11,part:"Part 5",label:"Express an opinion",badge:"badge-opin",prepTime:45,respTime:60,type:"opinion",
+   hint:"Chuẩn bị 45 giây → Nói 60 giây. Đưa ra ý kiến rõ ràng, lý do và ví dụ cụ thể.",
+   text:"Some people believe that working from home is more productive than working in an office. Others disagree and think the office environment is better for performance. What is your opinion? Give reasons and examples to support your answer."}
+];
+
+const TYPE_META={
+  read:{badge:"badge-read",label:"Read aloud",prepTime:45,respTime:45},
+  describe:{badge:"badge-desc",label:"Describe a picture",prepTime:45,respTime:30},
+  respond:{badge:"badge-resp",label:"Respond (15s)",prepTime:3,respTime:15},
+  respond30:{badge:"badge-resp",label:"Respond (30s)",prepTime:3,respTime:30},
+  info15:{badge:"badge-info",label:"Info provided (15s)",prepTime:3,respTime:15},
+  info30:{badge:"badge-info",label:"Info provided (30s)",prepTime:3,respTime:30},
+  opinion:{badge:"badge-opin",label:"Express opinion",prepTime:45,respTime:60},
+};
+
+const IPA={
+  'the':'/ðə/','this':'/ðɪs/','that':'/ðæt/','through':'/θruː/','three':'/θriː/','think':'/θɪŋk/',
+  'though':'/ðoʊ/','vacation':'/veɪˈkeɪʃən/','spectacular':'/spekˈtækjʊlər/','identification':'/aɪˌdentɪfɪˈkeɪʃən/',
+  'approximately':'/əˈprɒksɪmətli/','particularly':'/pəˈtɪkjʊlərli/','memorable':'/ˈmemərəbl/',
+  'experience':'/ɪkˈspɪərɪəns/','productive':'/prəˈdʌktɪv/','performance':'/pəˈfɔːrməns/',
+  'communication':'/kəˌmjuːnɪˈkeɪʃən/','negotiation':'/nɪˌɡoʊʃɪˈeɪʃən/','fundamental':'/ˌfʌndəˈmentl/',
+  'available':'/əˈveɪləbl/','immediately':'/ɪˈmiːdɪətli/','patience':'/ˈpeɪʃns/','opportunity':'/ˌɒpəˈtjuːnɪti/',
+};
+
+let currentUser=null,qIdx=0,allTasks=[...TASKS_DEFAULT];
+let recognition=null,isRecording=false,transcribed='';
+let timerInterval=null,timerPhase=null,timerSec=0,timerMax=0;
+let selectedPart='read';
+
+function doLogin(){
+  const name=document.getElementById('inp-name').value.trim();
+  const code=document.getElementById('inp-code').value.trim();
+  if(!name||!code){alert('Vui lòng nhập đủ tên và mã học viên.');return;}
+  currentUser={name,code};
+  localStorage.setItem('toeic_user',JSON.stringify(currentUser));
+  show('sc-main');initMain();
+}
+function doLogout(){currentUser=null;localStorage.removeItem('toeic_user');show('sc-login');}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
+
+function switchTab(name){
+  const names=['practice','custom','history'];
+  document.querySelectorAll('.tab').forEach((t,i)=>{t.classList.toggle('active',names[i]===name);});
+  document.querySelectorAll('.tab-panel').forEach((p,i)=>{p.classList.toggle('active',names[i]===name);});
+  if(name==='history')renderHist();
+  if(name==='custom')renderCustomList();
+}
+
+function initMain(){
+  const u=currentUser;
+  document.getElementById('av-name').textContent=u.name;
+  document.getElementById('av-init').textContent=u.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+  loadCustomTasks();buildProgress();loadTask();
+}
+
+function buildProgress(){
+  const wrap=document.getElementById('prog-steps');wrap.innerHTML='';
+  allTasks.forEach((_,i)=>{const d=document.createElement('div');d.className='step-dot'+(i<qIdx?' done':i===qIdx?' current':'');wrap.appendChild(d);});
+  const t=allTasks[qIdx];
+  document.getElementById('prog-label').textContent=`Câu ${qIdx+1}/${allTasks.length} — ${t.part||''}: ${t.label}`;
+}
+
+function loadTask(){
+  const t=allTasks[qIdx];buildProgress();
+  const bEl=document.getElementById('task-badge');bEl.className='task-badge '+(t.badge||'badge-read');bEl.textContent=(t.part||'')+' – '+t.label;
+  document.getElementById('task-num').textContent='Câu '+(t.q||qIdx+1);
+  document.getElementById('task-hint').textContent='⏱ '+(t.hint||'');
+  const iEl=document.getElementById('info-provided');
+  if(t.info){iEl.style.display='block';iEl.innerHTML='<div class="info-label">THÔNG TIN ĐỀ BÀI (đọc trước khi trả lời)</div><div class="info-box">'+t.info+'</div>';}
+  else iEl.style.display='none';
+  const sEl=document.getElementById('scenario-box');
+  if(t.scenario){sEl.style.display='block';sEl.textContent=t.scenario;}else sEl.style.display='none';
+  document.getElementById('task-body').textContent=t.text||'';
+  resetRec();
+  document.getElementById('fb-section').style.display='none';
+  document.getElementById('analyzing').style.display='none';
+  document.getElementById('nav-plain').style.display='flex';
+  document.getElementById('timer-section').style.display='none';
+  stopTimer();
+}
+
+function prevQ(){if(qIdx>0){qIdx--;loadTask();}}
+function nextQ(){if(qIdx<allTasks.length-1){qIdx++;loadTask();}}
+
+function resetRec(){
+  isRecording=false;transcribed='';stopTimer();
+  const btn=document.getElementById('btn-rec');btn.className='btn-rec idle';
+  document.getElementById('rec-icon').className='ti ti-microphone';
+  document.getElementById('rec-status').textContent='Nhấn mic để bắt đầu';
+  document.getElementById('rec-sub').textContent='Đồng hồ tự chạy khi bắt đầu ghi âm';
+  document.getElementById('btn-check').disabled=true;
+  if(recognition){try{recognition.stop();}catch(e){}recognition=null;}
+}
+
+function toggleRec(){if(!isRecording)startRec();else stopRec();}
+
+function startRec(){
+  if(!('webkitSpeechRecognition' in window)&&!('SpeechRecognition' in window)){alert('Vui lòng dùng Google Chrome.');return;}
+  const t=allTasks[qIdx];
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  recognition=new SR();recognition.continuous=true;recognition.interimResults=true;recognition.lang='en-US';
+  transcribed='';
+  recognition.onresult=(e)=>{
+    let interim='';
+    for(let i=e.resultIndex;i<e.results.length;i++){
+      if(e.results[i].isFinal)transcribed+=e.results[i][0].transcript+' ';
+      else interim+=e.results[i][0].transcript;
+    }
+    document.getElementById('rec-sub').textContent=(transcribed+interim).trim()||'Đang nghe...';
+  };
+  recognition.onerror=(e)=>{if(e.error==='not-allowed')alert('Cần cấp quyền micro cho trình duyệt.');};
+  recognition.start();
+  isRecording=true;
+  document.getElementById('btn-rec').className='btn-rec recording';
+  document.getElementById('rec-icon').className='ti ti-player-stop';
+  document.getElementById('rec-status').textContent='Đang ghi âm — nhấn để dừng';
+  document.getElementById('rec-sub').textContent='Đang nghe...';
+  startTimer('prep',t.prepTime,t.respTime);
+}
+
+function stopRec(){
+  if(recognition)recognition.stop();
+  isRecording=false;stopTimer();
+  document.getElementById('btn-rec').className='btn-rec done';
+  document.getElementById('rec-icon').className='ti ti-check';
+  document.getElementById('rec-status').textContent='Đã ghi xong!';
+  if(!transcribed.trim())document.getElementById('rec-sub').textContent='(Không nhận được âm) — thử lại';
+  document.getElementById('btn-check').disabled=!transcribed.trim();
+  document.getElementById('timer-section').style.display='none';
+}
+
+function startTimer(phase,prepSec,respSec){
+  stopTimer();timerPhase=phase;timerSec=phase==='prep'?prepSec:respSec;timerMax=timerSec;
+  document.getElementById('timer-section').style.display='block';updateTimerUI();
+  timerInterval=setInterval(()=>{
+    timerSec--;
+    if(timerSec<=0){
+      if(timerPhase==='prep'){timerPhase='resp';timerSec=respSec;timerMax=respSec;updateTimerUI();}
+      else{stopTimer();document.getElementById('timer-section').style.display='none';stopRec();}
+    }else updateTimerUI();
+  },1000);
+}
+function updateTimerUI(){
+  const pct=timerSec/timerMax*100,isPrep=timerPhase==='prep';
+  const bar=document.getElementById('timer-bar');
+  bar.style.width=pct+'%';bar.style.background=isPrep?'#EF9F27':(timerSec<=5?'#E24B4A':'#1D9E75');
+  document.getElementById('timer-num').textContent=timerSec;
+  document.getElementById('timer-label').textContent=isPrep?'Chuẩn bị':'Đang nói';
+  const lbl=document.getElementById('phase-lbl');
+  lbl.textContent=isPrep?'⏳ Chuẩn bị...':'🎙 Đang ghi âm';
+  lbl.className='phase-pill '+(isPrep?'phase-prep':'phase-speak');
+}
+function stopTimer(){clearInterval(timerInterval);timerInterval=null;}
+
+function doAnalyze(){
+  if(!transcribed.trim())return;
+  document.getElementById('nav-plain').style.display='none';
+  document.getElementById('fb-section').style.display='none';
+  document.getElementById('analyzing').style.display='block';
+  const t=allTasks[qIdx];
+  setTimeout(()=>{
+    const res=analyze(t.text,transcribed.trim());
+    document.getElementById('analyzing').style.display='none';
+    renderFeedback(res,t.text,transcribed.trim());
+    saveHist(res.total,t);
+  },1200);
+}
+
+function levenshtein(a,b){
+  const dp=Array.from({length:a.length+1},(_,i)=>[i,...Array(b.length).fill(0)]);
+  for(let j=0;j<=b.length;j++)dp[0][j]=j;
+  for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++)
+    dp[i][j]=a[i-1]===b[j-1]?dp[i-1][j-1]:1+Math.min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1]);
+  return dp[a.length][b.length];
+}
+function wordSim(a,b){if(a===b)return 1;const l=a.length>b.length?a:b,s=a.length>b.length?b:a;if(!l.length)return 1;return(l.length-levenshtein(l,s))/l.length;}
+
+function analyze(target,spoken){
+  const clean=s=>s.replace(/[^a-zA-Z\s]/g,'').toLowerCase();
+  const tw=clean(target).split(/\s+/).filter(Boolean),sw=clean(spoken).split(/\s+/).filter(Boolean);
+  const used=new Set();
+  const words=tw.map(t=>{
+    let best=0,bidx=-1;
+    sw.forEach((s,i)=>{if(used.has(i))return;const sc=wordSim(t,s);if(sc>best){best=sc;bidx=i;}});
+    if(bidx>=0&&best>0.5)used.add(bidx);
+    return{word:t,score:best,status:best>=0.85?'good':best>=0.6?'warn':'bad'};
+  });
+  const accuracy=Math.round(words.filter(w=>w.status==='good').length/tw.length*100);
+  const fluency=Math.min(100,Math.round((sw.length/tw.length)*85+Math.random()*15));
+  const complete=Math.round(Math.min(sw.length,tw.length)/tw.length*100);
+  return{words,accuracy,fluency,complete,total:Math.round(accuracy*.5+fluency*.3+complete*.2)};
+}
+
+const TIPS={
+  bad:[w=>`"${w}" chưa được nhận diện — phát âm chậm từng âm tiết rồi ghép lại.`,w=>`"${w}" — tra phiên âm IPA trên Cambridge Dictionary và luyện lặp lại.`,w=>`"${w}" — mở miệng rộng hơn và đọc thật rõ ràng.`],
+  warn:[w=>`"${w}" gần đúng! Kiểm tra trọng âm và âm cuối xem có bị nuốt không.`,w=>`"${w}" — thử kéo dài nguyên âm chính một chút.`]
+};
+function getTip(w,s){const p=TIPS[s]||TIPS.warn;return p[Math.floor(Math.random()*p.length)](w);}
+
+function findLiaisons(text){
+  const words=text.replace(/[^a-zA-Z\s]/g,' ').split(/\s+/).filter(Boolean);
+  const res=[];const vowels='aeiouAEIOU';
+  for(let i=0;i<words.length-1;i++){
+    const w=words[i],nw=words[i+1],lc=w[w.length-1],fc=nw[0];
+    if(!'aeiou'.includes(lc.toLowerCase())&&vowels.includes(fc))
+      res.push({w1:w,w2:nw,note:`"${w}" kết thúc bằng phụ âm /${lc}/ → nối liền sang "${nw}" bắt đầu bằng nguyên âm /${fc}/`});
+  }
+  return res.slice(0,5);
+}
+function findPauses(text){
+  const chunks=[];
+  const punc=text.match(/[^,.:;!?]+[,.:;!?]/g)||[];
+  punc.forEach(chunk=>{
+    const t=chunk.trim();
+    if(t.length>15&&t.length<120){
+      const mark=t.slice(-1);
+      const label=mark===','?'ngắt ngắn (,)':mark==='.'?'dừng hẳn (.)':'ngắt vừa';
+      chunks.push({note:`Sau "...${t.slice(-20).trim()}" — nên ${label}`});
+    }
+  });
+  const wc=text.split(/\s+/).length;
+  if(wc>15&&chunks.length===0)chunks.push({note:'Câu dài không dấu câu — nên tự ngắt giữa câu để lấy hơi, tránh đọc liến thoắng.'});
+  return chunks.slice(0,4);
+}
+
+function renderFeedback(res,target,spoken){
+  const{words,accuracy,fluency,complete,total}=res;
+  document.getElementById('sc-total').textContent=total;
+  const color=total>=80?'#1D9E75':total>=60?'#EF9F27':'#E24B4A';
+  const bar=document.getElementById('sc-bar');bar.style.background=color;
+  setTimeout(()=>bar.style.width=total+'%',60);
+  document.getElementById('sc-acc').textContent=accuracy+'%';
+  document.getElementById('sc-flu').textContent=fluency+'%';
+  document.getElementById('sc-com').textContent=complete+'%';
+
+  const origW=target.split(/\s+/);
+  let th=`<div style="font-size:11px;color:var(--text2);margin-bottom:5px;">Bạn nói: <span style="color:var(--text)">${spoken}</span></div><div style="font-size:11px;color:var(--text2);margin-bottom:4px;">Bản gốc (màu = độ chính xác):</div>`;
+  words.forEach((w,i)=>{th+=`<span class="t-${w.status}">${origW[i]||w.word}</span> `;});
+  document.getElementById('fb-trans').innerHTML=th;
+
+  const chips=document.getElementById('fb-chips');chips.innerHTML='';
+  words.forEach(w=>{const c=document.createElement('span');c.className='chip chip-'+w.status[0];c.textContent=w.word;chips.appendChild(c);});
+
+  const dets=document.getElementById('fb-dets');dets.innerHTML='';
+  const probs=words.filter(w=>w.status!=='good');
+  if(!probs.length)dets.innerHTML='<div style="font-size:13px;color:#3B6D11;padding:5px 0;">✓ Tất cả từ được nhận diện tốt!</div>';
+  else probs.slice(0,5).forEach(w=>{const ipa=IPA[w.word]||'';const d=document.createElement('div');d.className='word-det det-'+w.status;d.innerHTML=`<div class="det-word">${w.word}${ipa?` <span class="det-ipa">${ipa}</span>`:''}</div><div class="det-tip">${getTip(w.word,w.status)}</div>`;dets.appendChild(d);});
+
+  const liaisons=findLiaisons(target);
+  document.getElementById('liaison-list').innerHTML=liaisons.length
+    ?liaisons.map(l=>`<div class="liaison-item"><span class="liaison-word">${l.w1} + ${l.w2}</span> — ${l.note}</div>`).join('')
+    :'<div style="font-size:13px;color:var(--text2);">Câu này ít cơ hội nối âm rõ ràng.</div>';
+
+  const pauses=findPauses(target);
+  document.getElementById('pause-list').innerHTML=pauses.length
+    ?pauses.map(p=>`<div class="liaison-item pause-item">${p.note}</div>`).join('')
+    :'<div style="font-size:13px;color:var(--text2);">Câu ngắn — đọc liền mạch, không cần ngắt nhiều.</div>';
+
+  const tips=[];
+  if(accuracy<70)tips.push('🔴 Độ chính xác thấp — luyện từng từ khó trước khi đọc cả câu.');
+  if(fluency<70)tips.push('🟡 Lưu loát chưa tốt — đọc chậm và đúng trước, tốc độ sẽ đến sau.');
+  if(complete<80)tips.push('🟡 Bỏ sót một số từ — cố đọc hết câu, kể cả từ nối nhỏ.');
+  if(!tips.length)tips.push('🟢 Phát âm tốt! Lần tới tập trung nối âm để nghe tự nhiên hơn.');
+  tips.push('💡 Nghe giọng mẫu trên YouGlish hoặc ELSA Speak để cảm nhận cách nối âm thực tế.');
+  document.getElementById('fb-sugs').innerHTML=tips.map(t=>`<div class="sug-item">${t}</div>`).join('');
+  document.getElementById('fb-section').style.display='block';
+}
+
+function selPart(el){document.querySelectorAll('.part-pill').forEach(p=>p.classList.remove('sel'));el.classList.add('sel');selectedPart=el.dataset.part;}
+function openLink(){const url=document.getElementById('inp-link').value.trim();if(!url){alert('Vui lòng dán link vào ô trước.');return;}window.open(url,'_blank');}
+
+function addCustomTask(){
+  const content=document.getElementById('inp-content').value.trim();
+  if(!content){alert('Vui lòng nhập nội dung câu hỏi.');return;}
+  const info=document.getElementById('inp-info').value.trim();
+  const link=document.getElementById('inp-link').value.trim();
+  const meta=TYPE_META[selectedPart]||TYPE_META.read;
+  const task={q:'C',part:'Custom',label:meta.label,badge:meta.badge,prepTime:meta.prepTime,respTime:meta.respTime,type:selectedPart,text:content,info:info||null,sourceLink:link||null,id:Date.now(),hint:`Chuẩn bị ${meta.prepTime} giây → Trả lời ${meta.respTime} giây.`};
+  const customs=getCustoms();customs.push(task);saveCustoms(customs);
+  allTasks=[...TASKS_DEFAULT,...customs];
+  document.getElementById('inp-content').value='';document.getElementById('inp-info').value='';document.getElementById('inp-link').value='';
+  renderCustomList();buildProgress();
+  alert('Đã thêm! Vào tab Luyện tập để thực hành.');
+}
+
+function getCustoms(){return JSON.parse(localStorage.getItem('toeic_customs_'+(currentUser?currentUser.code:'x'))||'[]');}
+function saveCustoms(arr){localStorage.setItem('toeic_customs_'+(currentUser?currentUser.code:'x'),JSON.stringify(arr));}
+function loadCustomTasks(){allTasks=[...TASKS_DEFAULT,...getCustoms()];}
+
+function renderCustomList(){
+  const customs=getCustoms();
+  const wrap=document.getElementById('custom-list');
+  if(!customs.length){wrap.innerHTML='<div class="empty-st">Chưa có đề nào. Thêm đề ở trên nhé!</div>';return;}
+  wrap.innerHTML=customs.map((t,i)=>{
+    const meta=TYPE_META[t.type]||TYPE_META.read;
+    return`<div class="custom-item">
+      <span class="task-badge ${meta.badge}" style="flex-shrink:0;">${meta.label}</span>
+      <span class="custom-item-text">${t.text.slice(0,60)}${t.text.length>60?'...':''}</span>
+      ${t.sourceLink?`<a href="${t.sourceLink}" target="_blank" style="font-size:12px;color:#185FA5;flex-shrink:0;"><i class="ti ti-external-link"></i></a>`:''}
+      <button class="btn-use" onclick="useCustom(${i})">Luyện</button>
+      <button class="btn-del" onclick="delCustom(${t.id})"><i class="ti ti-trash"></i></button>
+    </div>`;
+  }).join('');
+}
+
+function useCustom(i){qIdx=TASKS_DEFAULT.length+i;switchTab('practice');loadTask();}
+function delCustom(id){let c=getCustoms();c=c.filter(x=>x.id!==id);saveCustoms(c);allTasks=[...TASKS_DEFAULT,...c];renderCustomList();buildProgress();}
+
+function saveHist(score,task){
+  if(!currentUser)return;
+  const key='toeic_hist_'+currentUser.code;
+  const h=JSON.parse(localStorage.getItem(key)||'[]');
+  h.unshift({q:task.q,label:task.label,text:(task.text||'').slice(0,55),score,date:new Date().toLocaleDateString('vi-VN')});
+  localStorage.setItem(key,JSON.stringify(h.slice(0,30)));
+}
+function renderHist(){
+  if(!currentUser)return;
+  const h=JSON.parse(localStorage.getItem('toeic_hist_'+currentUser.code)||'[]');
+  const wrap=document.getElementById('hist-list');
+  if(!h.length){wrap.innerHTML='<div class="empty-st">Chưa có lịch sử</div>';return;}
+  wrap.innerHTML=h.map(x=>{const c=x.score>=80?'#1D9E75':x.score>=60?'#BA7517':'#A32D2D';return`<div class="hist-item"><span class="hist-q">[${x.label}] ${x.text}...</span><span style="font-weight:600;color:${c}">${x.score}/100</span><span style="font-size:11px;color:var(--text2);margin-left:6px;">${x.date}</span></div>`;}).join('');
+}
+function clearHist(){if(!currentUser)return;if(!confirm('Xóa toàn bộ lịch sử?'))return;localStorage.removeItem('toeic_hist_'+currentUser.code);renderHist();}
+
+window.onload=()=>{const s=localStorage.getItem('toeic_user');if(s){currentUser=JSON.parse(s);show('sc-main');initMain();}};
+</script>
+</body>
+</html>
